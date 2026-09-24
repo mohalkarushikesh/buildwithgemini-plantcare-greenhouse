@@ -1,94 +1,68 @@
-# my-agent
+# PlantCare Greenhouse Assistant 🌿
 
-Simple ReAct agent
-Agent generated with `agents-cli` version `1.7.0`
-
-## Project Structure
-
-```
-my-agent/
-├── app/         # Core agent code
-│   ├── agent.py               # Main agent logic
-│   ├── fast_api_app.py        # FastAPI Backend server
-│   └── app_utils/             # App utilities and helpers
-├── tests/                     # Unit, integration, and load tests
-├── GEMINI.md                  # AI-assisted development guide
-└── pyproject.toml             # Project dependencies
-```
-
-> 💡 **Tip:** Use [Antigravity CLI](https://antigravity.google/) for AI-assisted development - project context is pre-configured in `GEMINI.md`.
-
-## Requirements
-
-Before you begin, ensure you have:
-- **uv**: Python package manager (used for all dependency management in this project) - [Install](https://docs.astral.sh/uv/getting-started/installation/) ([add packages](https://docs.astral.sh/uv/concepts/dependencies/) with `uv add <package>`)
-- **agents-cli**: Agents CLI - Install with `uv tool install google-agents-cli`
-- **Google Cloud SDK**: For GCP services - [Install](https://cloud.google.com/sdk/docs/install)
-
-
-## Quick Start
-
-Install `agents-cli` and its skills if not already installed:
-
-```bash
-uvx google-agents-cli setup
-```
-
-Install required packages:
-
-```bash
-agents-cli install
-```
-
-Test the agent with a local web server:
-
-```bash
-agents-cli playground
-```
-
-You can also use features from the [ADK](https://adk.dev/) CLI with `uv run adk`.
-
-## Commands
-
-| Command              | Description                                                                                 |
-| -------------------- | ------------------------------------------------------------------------------------------- |
-| `agents-cli install` | Install dependencies using uv                                                         |
-| `agents-cli playground` | Launch local development environment                                                  |
-| `agents-cli lint`    | Run code quality checks                                                               |
-| `agents-cli eval`    | Evaluate agent behavior (generate, grade, analyze, and more — see `agents-cli eval --help`) |
-| `uv run pytest tests/unit tests/integration` | Run unit and integration tests                                                        |
-| `agents-cli deploy`  | Deploy agent to Agent Runtime                                                                |
-| `agents-cli publish gemini-enterprise` | Register deployed agent to Gemini Enterprise                    || [A2A Inspector](https://github.com/a2aproject/a2a-inspector) | Launch A2A Protocol Inspector                                                        |
-
-## 🛠️ Project Management
-
-| Command | What It Does |
-|---------|--------------|
-| `agents-cli scaffold enhance` | Add CI/CD pipelines and Terraform infrastructure |
-| `agents-cli infra cicd` | One-command setup of entire CI/CD pipeline + infrastructure |
-| `agents-cli scaffold upgrade` | Auto-upgrade to latest version while preserving customizations |
+A production-ready conversational AI agent and web application built with Google Agent Development Kit (ADK) and deployed to **Google Cloud Run**.
 
 ---
 
-## Development
+## 🌐 Public Live Application
 
-Edit your agent logic in `app/agent.py` and test with `agents-cli playground` - it auto-reloads on save.
+- **Live Public App (Google Cloud Run)**: [https://plantcare-frontend-597874512082.us-east4.run.app](https://plantcare-frontend-597874512082.us-east4.run.app)
+- **GitHub Repository**: [https://github.com/mohalkarushikesh/buildwithgemini-plantcare-greenhouse](https://github.com/mohalkarushikesh/buildwithgemini-plantcare-greenhouse)
 
-## Deployment
+---
 
+## 💡 Sample Questions & Prompts
+
+Try asking the agent any of the following sample queries in the web chat:
+
+### 1. 🪴 Catalog Management & Inspection
+> *"List all plants currently in our greenhouse catalog and show the watering frequency for Monstera Deliciosa."*
+
+### 2. 🎨 Visual Diagnostics & Imagen Generation
+> *"Generate a high-quality visual photo of a healthy Monstera Deliciosa plant thriving in bright indirect sunlight."*
+
+### 3. 🧮 Soil Moisture Calculations & Inventory Math
+> *"We have 15 Monsteras requiring 450ml water twice a week, and 12 Snake Plants needing 200ml once a week. Calculate total monthly water consumption in liters using Python."*
+
+---
+
+## 🖥️ Running as a Local Daemon Service
+
+You can run the web application continuously in the background on your local workstation.
+
+### Start Daemon Service
 ```bash
-gcloud config set project <your-project-id>
-agents-cli deploy
+./start_daemon.sh
+```
+*App will run continuously on `http://localhost:8080` (or `http://0.0.0.0:8080`).*
+
+### Stop Daemon Service
+```bash
+./stop_daemon.sh
 ```
 
-To add CI/CD and Terraform, run `agents-cli scaffold enhance`.
-To set up your production infrastructure, run `agents-cli infra cicd`.
+---
 
-## Observability
+## 🏗️ Architecture & Features
 
-Built-in telemetry exports to Cloud Trace, BigQuery, and Cloud Logging.
+- **Model Engine**: Gemini 2.5 Flash via Google Cloud Vertex AI (`google-genai`).
+- **Catalog Database**: Native Cloud Firestore (`plants` collection).
+- **Media Storage**: Public Google Cloud Storage Bucket (`gs://plantcare-media-qwiklabs-gcp-02-99845fbbae24`).
+- **Code Execution**: `AgentEngineSandboxCodeExecutor` for safe server-side Python math execution.
+- **Visual Interface**: FastAPI proxy with built-in A2UI card renderer.
+- **Deployment**: Google Cloud Run in `us-east4`.
 
-## A2A Inspector
+---
 
-This agent supports the [A2A Protocol](https://a2a-protocol.org/). Use the [A2A Inspector](https://github.com/a2aproject/a2a-inspector) to test interoperability.
-See the [A2A Inspector docs](https://github.com/a2aproject/a2a-inspector) for details.
+## 🛠️ Local Development
+
+### Requirements
+- Python 3.11+
+- `uv` package manager (`uv sync`)
+
+### Test Chat Endpoint Locally
+```bash
+curl -s -X POST http://localhost:8080/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "List all plants in our catalog"}'
+```
