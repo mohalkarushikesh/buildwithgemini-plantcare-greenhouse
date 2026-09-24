@@ -1,0 +1,16 @@
+name: 'plantcare-greenhouse'
+acli_version: '1.7.0'
+agent_directory: 'app'
+region: 'us-east4'
+base_template: 'adk'
+generated_at: '2026-09-24T06:12:10.465541+00:00'
+language: 'python'
+framework: 'google-adk'
+create_params:
+  root_agent_name: 'plantcare_greenhouse'
+  deployment_target: 'agent_runtime'
+  session_type: 'in_memory'
+  cicd_runner: 'skip'
+  is_a2a: true
+  agent_gateway: False
+  agent_guidance_filename: 'GEMINI.md'
