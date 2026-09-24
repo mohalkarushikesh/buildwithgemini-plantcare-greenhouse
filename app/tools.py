@@ -203,3 +203,131 @@ def export_greenhouse_report() -> dict:
         "climate_efficiency_score": "A+ (Solar + Smart HVAC)",
         "recommendations": "Maintain current humidity levels (65-70%) and execute bi-weekly liquid fertilizer routines."
     }
+
+def plan_propagation(species_name: str, method: str) -> dict:
+    """Generate stem cutting and seed propagation plans including rooting medium, heat mat settings, and node preparation.
+    
+    Args:
+        species_name: Plant name (e.g. 'Monstera Deliciosa', 'Pothos', 'Fiddle Leaf Fig').
+        method: Propagation technique ('stem_cutting', 'water_propagation', 'sphagnum_moss', or 'seed').
+        
+    Returns:
+        Dictionary with step-by-step propagation guide, expected rooting days, and substrate recipe.
+    """
+    return {
+        "species_name": species_name,
+        "method": method,
+        "expected_rooting_days": "14 to 21 days",
+        "optimal_temperature": "24°C - 26°C (75°F - 78°F)",
+        "humidity_chamber_recommended": True,
+        "substrate_recipe": "50% Damp Sphagnum Moss + 50% Perlite" if "moss" in method.lower() else "Distilled Water + 1 drop Rooting Hormone",
+        "step_by_step": [
+            "Cut 0.5 inches below an active aerial root node using sterilized shears.",
+            "Let the cut end callus over in warm ambient air for 30 minutes.",
+            "Submerge the node completely in substrate while leaving leaves above the rim.",
+            "Place under indirect LED grow light (12 hours/day) with bottom heat mat ON."
+        ]
+    }
+
+def get_soil_mix_recipe(plant_type: str, pot_size_inches: float) -> dict:
+    """Calculate custom chunky soil mix proportions by volume for tropical, succulent, or indoor plants.
+    
+    Args:
+        plant_type: Category ('tropical_aroid', 'succulent_cactus', 'general_houseplant').
+        pot_size_inches: Pot diameter in inches.
+        
+    Returns:
+        Dictionary with soil ingredient breakdown percentages, total soil volume needed, and potting tips.
+    """
+    # Calculate soil volume for cylindrical pot: V = pi * r^2 * h (approx height = 0.9 * diameter)
+    radius_cm = (pot_size_inches * 2.54) / 2.0
+    height_cm = pot_size_inches * 2.54 * 0.9
+    volume_liters = round((3.14159 * (radius_cm ** 2) * height_cm) / 1000.0, 2)
+    
+    if "aroid" in plant_type.lower() or "tropical" in plant_type.lower():
+        breakdown = {
+            "Orchid Bark": "40%",
+            "Coarse Perlite / Pumice": "30%",
+            "Peat Moss / Coco Coir": "20%",
+            "Horticultural Charcoal": "5%",
+            "Worm Castings": "5%"
+        }
+    elif "succulent" in plant_type.lower() or "cactus" in plant_type.lower():
+        breakdown = {
+            "Coarse Sand & Pumice": "60%",
+            "Potting Soil": "30%",
+            "Perlite": "10%"
+        }
+    else:
+        breakdown = {
+            "Potting Soil": "50%",
+            "Perlite": "30%",
+            "Coco Coir": "20%"
+        }
+        
+    return {
+        "plant_type": plant_type,
+        "pot_size_inches": pot_size_inches,
+        "total_soil_volume_liters": volume_liters,
+        "ingredient_breakdown_by_volume": breakdown,
+        "drainage_rating": "Excellent (Prevents Root Rot)"
+    }
+
+def calculate_grow_light_schedule(plant_category: str, natural_daylight_hours: float) -> dict:
+    """Calculate supplemental LED grow light photoperiod hours, DLI (Daily Light Integral), and PPFD distance.
+    
+    Args:
+        plant_category: Plant light intensity group ('high_light_ficus', 'medium_light_monstera', 'low_light_snake').
+        natural_daylight_hours: Available natural sunlight per day.
+        
+    Returns:
+        Dictionary with required LED timer hours per day, recommended PPFD ($\mu\text{mol/m}^2/\text{s}$), and lamp height.
+    """
+    target_hours = 14.0
+    supplemental_hours = max(0.0, round(target_hours - natural_daylight_hours, 1))
+    
+    return {
+        "plant_category": plant_category,
+        "natural_daylight_hours": natural_daylight_hours,
+        "target_photoperiod_hours": target_hours,
+        "supplemental_led_hours": supplemental_hours,
+        "recommended_ppfd_umol": "300 - 450 umol/m2/s",
+        "recommended_lamp_distance": "12 to 18 inches above canopy",
+        "timer_setting": f"Set LED Grow Light ON for {supplemental_hours} hours daily"
+    }
+
+def lookup_pest_treatment(pest_name: str) -> dict:
+    """Look up comprehensive organic and chemical treatment protocols for common houseplant pests.
+    
+    Args:
+        pest_name: Name of pest (e.g. 'mealybugs', 'spider_mites', 'thrips', 'fungus_gnats', 'scale').
+        
+    Returns:
+        Dictionary with pest identification, organic spray recipe, isolation period, and soil treatment.
+    """
+    p_lower = pest_name.lower()
+    
+    if "spider" in p_lower or "mite" in p_lower:
+        organic = "Cold-pressed Neem Oil (1 tsp) + Castile Soap (0.5 tsp) per 1 Liter warm water. Spray underside of leaves."
+        isolation = "14 days away from collection"
+        freq = "Every 4 days for 3 consecutive weeks"
+    elif "mealy" in p_lower or "scale" in p_lower:
+        organic = "70% Isopropyl Alcohol on a cotton swab for direct contact, followed by Insecticidal Soap spray."
+        isolation = "21 days"
+        freq = "Every 5 days until zero pests visible"
+    elif "gnat" in p_lower:
+        organic = "Yellow sticky traps + Mosquito Bits (BTI bacteria) drenched into soil during watering."
+        isolation = "None required"
+        freq = "Every watering for 14 days"
+    else:
+        organic = "Dilute Neem Oil or Insecticidal Soap foliage wash."
+        isolation = "7 to 10 days"
+        freq = "Weekly"
+        
+    return {
+        "pest_name": pest_name,
+        "organic_treatment": organic,
+        "isolation_period": isolation,
+        "treatment_frequency": freq,
+        "prevention_tip": "Maintain high humidity (>60%) and wipe leaf dust regularly with micro-fiber cloth."
+    }
