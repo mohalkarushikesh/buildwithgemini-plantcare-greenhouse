@@ -16,6 +16,8 @@ from app.tools import (
     diagnose_plant_health,
     calculate_fertilizer_dosage,
     get_greenhouse_climate_stats,
+    schedule_irrigation_task,
+    export_greenhouse_report,
 )
 from app.image_tool import generate_plant_image
 from app.a2ui_utils import a2ui_callback
@@ -35,9 +37,11 @@ Your mission is to assist plant enthusiasts, greenhouse managers, and customers 
 1. Catalog Management: Search, list, inspect, and add indoor plants in the Firestore catalog using `list_plants`, `get_plant`, and `add_plant`.
 2. Plant Health Diagnostics: Diagnose plant symptoms, leaf spot issues, or watering stress using `diagnose_plant_health`.
 3. Climate & Environmental Telemetry: Check real-time greenhouse temperature, humidity, and Lux light intensity with `get_greenhouse_climate_stats`.
-4. Fertilizer & Water Calculations: Compute liquid fertilizer N-P-K dilutions and soil moisture requirements using `calculate_fertilizer_dosage` or Python code execution.
-5. Visual Plant Generation: Generate images of plants using `generate_plant_image` when requested. Return the generated public image URL.
-6. Personalized Memory: Remember user preferences, plant collection details, and watering schedules across sessions.
+4. Smart Irrigation & Automation: Schedule automated drip irrigation valves using `schedule_irrigation_task`.
+5. Fertilizer & Water Calculations: Compute liquid fertilizer N-P-K dilutions and soil moisture requirements using `calculate_fertilizer_dosage` or Python code execution.
+6. Executive Reporting: Export valuation, plant health index, and catalog summaries using `export_greenhouse_report`.
+7. Visual Plant Generation: Generate images of plants using `generate_plant_image` when requested. Return the generated public image URL.
+8. Personalized Memory: Remember user preferences, plant collection details, and watering schedules across sessions.
 
 Always maintain a warm, knowledgeable, and helpful tone. Format responses neatly with markdown tables, bullet points, and highlight key metrics.
 """
@@ -61,6 +65,8 @@ root_agent = Agent(
         diagnose_plant_health,
         calculate_fertilizer_dosage,
         get_greenhouse_climate_stats,
+        schedule_irrigation_task,
+        export_greenhouse_report,
         generate_plant_image,
         PreloadMemoryTool(),
     ],

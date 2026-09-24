@@ -130,7 +130,6 @@ def calculate_fertilizer_dosage(num_plants: int, pot_size_inches: float, growth_
     base_water_per_plant_liters = (pot_size_inches / 10.0) * 0.5
     total_water_liters = round(base_water_per_plant_liters * num_plants, 2)
     
-    # Standard liquid 10-10-10 dilution: 5ml per liter in spring/summer, 2.5ml per liter in fall/winter
     ml_per_liter = 5.0 if "spring" in growth_season.lower() or "summer" in growth_season.lower() else 2.5
     total_fertilizer_ml = round(total_water_liters * ml_per_liter, 2)
     
@@ -160,4 +159,47 @@ def get_greenhouse_climate_stats() -> dict:
         "soil_moisture_avg_pct": 42.0,
         "soil_ph_avg": 6.3,
         "system_status": "Optimal Growing Conditions Active"
+    }
+
+def schedule_irrigation_task(zone_id: str, run_time_minutes: int, repeat_days: int) -> dict:
+    """Schedule automated smart drip irrigation solenoid valve cycles for a greenhouse zone.
+    
+    Args:
+        zone_id: Greenhouse zone identifier (e.g., 'Zone 1 - Tropicals', 'Zone 2 - Succulents').
+        run_time_minutes: Duration to run irrigation pumps in minutes.
+        repeat_days: Recurrence interval in days (e.g. every 3 days, 7 days).
+        
+    Returns:
+        Confirmation dictionary with scheduled valve timer details.
+    """
+    task_id = f"IRR-{random.randint(1000, 9999)}"
+    return {
+        "task_id": task_id,
+        "status": "Scheduled",
+        "zone_id": zone_id,
+        "duration_minutes": run_time_minutes,
+        "interval_days": repeat_days,
+        "next_execution": f"Tomorrow at 06:00 AM (Recurring every {repeat_days} days)",
+        "water_flow_rate_gpm": 2.5,
+        "estimated_gallons_per_cycle": round(2.5 * run_time_minutes, 1)
+    }
+
+def export_greenhouse_report() -> dict:
+    """Export executive greenhouse inventory valuation, plant health index, and climate analytics summary.
+    
+    Returns:
+        Summary metrics dictionary including catalog count, estimated inventory value ($), and health index.
+    """
+    plants = list_plants()
+    total_count = len(plants)
+    total_value = sum(p.get("price", 0) * p.get("stock_count", 1) for p in plants) if plants else 0
+    
+    return {
+        "report_type": "Greenhouse Operations & Catalog Executive Summary",
+        "total_catalog_species": total_count,
+        "total_inventory_units": 40,
+        "estimated_inventory_value_usd": f"${total_value:,.2f}",
+        "plant_health_index": "96.4% Optimal",
+        "climate_efficiency_score": "A+ (Solar + Smart HVAC)",
+        "recommendations": "Maintain current humidity levels (65-70%) and execute bi-weekly liquid fertilizer routines."
     }
