@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PlantCare Greenhouse Suite - All-in-One Botanical Solution</title>
+<title>PlantCare Greenhouse Suite - Next-Gen AI Botanical OS</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Material+Symbols+Outlined">
 <style>
   :root {
@@ -65,6 +65,11 @@
     font-size: 0.8rem;
     font-weight: 500;
     align-items: center;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .telemetry-bar:hover {
+    background: rgba(0,0,0,0.4);
   }
   .telemetry-item {
     display: flex;
@@ -92,6 +97,10 @@
   }
   .header-btn:hover {
     background: rgba(255,255,255,0.35);
+  }
+  .header-btn.active {
+    background: #4caf50;
+    color: #fff;
   }
   #log {
     flex: 1;
@@ -239,11 +248,20 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background 0.2s;
+    transition: all 0.2s;
   }
   .icon-btn:hover {
     background: var(--primary);
     color: #fff;
+  }
+  .icon-btn.recording {
+    background: #e53935;
+    color: #fff;
+    animation: pulse 1s infinite alternate;
+  }
+  @keyframes pulse {
+    from { transform: scale(1); }
+    to { transform: scale(1.08); }
   }
   button.send-btn {
     padding: 0.85rem 1.6rem;
@@ -281,7 +299,7 @@
   .modal-card {
     background: var(--card-bg);
     border-radius: 20px;
-    max-width: 650px;
+    max-width: 720px;
     width: 100%;
     padding: 1.75rem;
     box-shadow: 0 10px 30px rgba(0,0,0,0.25);
@@ -330,7 +348,40 @@
     font-weight: 600;
   }
 
-  /* Printable Care Card CSS */
+  /* Telemetry Charts Modal Grid */
+  .chart-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+  .chart-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .chart-header {
+    font-weight: 600;
+    font-size: 0.95rem;
+    display: flex;
+    justify-content: space-between;
+  }
+  .chart-value {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--primary);
+  }
+  .sparkline {
+    width: 100%;
+    height: 50px;
+    stroke: var(--primary);
+    stroke-width: 2.5;
+    fill: none;
+  }
+
   @media print {
     header, .controls-container, .theme-toggle, .header-actions { display: none !important; }
     body { background: #fff; color: #000; }
@@ -342,10 +393,10 @@
 <header>
   <div class="header-left">
     <span class="material-symbols-outlined logo-icon">potted_plant</span>
-    <span>PlantCare Greenhouse Suite</span>
+    <span>PlantCare Greenhouse OS</span>
   </div>
 
-  <div class="telemetry-bar">
+  <div id="telemetryBarBtn" class="telemetry-bar" title="Click for Live Environmental Charts">
     <div class="telemetry-item"><span>🌡️</span> <span>23.8°C</span></div>
     <div class="telemetry-item"><span>💧</span> <span>68.5%</span></div>
     <div class="telemetry-item"><span>☀️</span> <span>14.2k Lux</span></div>
@@ -353,6 +404,10 @@
   </div>
 
   <div class="header-actions">
+    <button id="ttsToggleBtn" class="header-btn" title="Toggle AI Voice Response (Text-to-Speech)">
+      <span class="material-symbols-outlined" style="color:#fff; font-size:1.1rem;">volume_up</span>
+      <span>Voice AI</span>
+    </button>
     <button id="calendarBtn" class="header-btn" title="View Care Calendar">
       <span class="material-symbols-outlined" style="color:#fff; font-size:1.1rem;">calendar_month</span>
       <span>Care Schedule</span>
@@ -369,8 +424,8 @@
 
 <div id="log">
   <div class="msg agent">
-    <span class="msg-author">PlantCare Suite</span>
-    <div class="bubble">🌿 Welcome to the All-in-One PlantCare Suite! Upload a plant photo 📸 for visual AI disease diagnosis, check your upcoming Care Schedule 📅, or ask about soil mix recipes and propagation.</div>
+    <span class="msg-author">PlantCare OS</span>
+    <div class="bubble">🌿 Welcome to Next-Gen PlantCare Greenhouse OS! Use 🎙️ Voice Input, 📸 Photo AI Vision, 🔊 Text-to-Speech Voice AI, or 📊 Live Telemetry Charts.</div>
   </div>
 </div>
 
@@ -392,12 +447,15 @@
     <button type="button" id="uploadBtn" class="icon-btn" title="Upload Plant Photo for AI Vision Diagnosis">
       <span class="material-symbols-outlined">add_a_photo</span>
     </button>
-    <input type="text" id="input" placeholder="Ask anything about plants, soil mixes, propagation, pest treatments, or climate..." autocomplete="off" autofocus>
+    <button type="button" id="micBtn" class="icon-btn" title="Click to Speak Hands-Free Voice Input">
+      <span class="material-symbols-outlined">mic</span>
+    </button>
+    <input type="text" id="input" placeholder="Speak hands-free 🎙️ or ask about plants, soil mixes, irrigation..." autocomplete="off" autofocus>
     <button type="submit" class="send-btn"><span>Send</span> <span class="material-symbols-outlined" style="color:#fff; font-size:1.1rem;">send</span></button>
   </form>
 </div>
 
-<!-- Calendar Modal -->
+<!-- Care Calendar Modal -->
 <div id="calendarModal" class="modal-overlay">
   <div class="modal-card">
     <div class="modal-header">
@@ -405,7 +463,7 @@
         <span class="material-symbols-outlined">calendar_month</span>
         <span>Greenhouse Care & Watering Schedule</span>
       </div>
-      <button id="closeModal" class="close-btn">&times;</button>
+      <button id="closeCalendarModal" class="close-btn">&times;</button>
     </div>
     <div>
       <table class="calendar-table">
@@ -425,18 +483,69 @@
   </div>
 </div>
 
+<!-- Telemetry Dashboard Modal -->
+<div id="telemetryModal" class="modal-overlay">
+  <div class="modal-card">
+    <div class="modal-header">
+      <div class="modal-title">
+        <span class="material-symbols-outlined">monitoring</span>
+        <span>Greenhouse Zone 1 Live Telemetry & 24h Trends</span>
+      </div>
+      <button id="closeTelemetryModal" class="close-btn">&times;</button>
+    </div>
+    <div class="chart-grid">
+      <div class="chart-card">
+        <div class="chart-header"><span>Ambient Temperature</span><span>Target: 24°C</span></div>
+        <div class="chart-value">23.8°C</div>
+        <svg class="sparkline" viewBox="0 0 100 30"><polyline points="0,20 20,18 40,25 60,15 80,12 100,14" /></svg>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header"><span>Relative Humidity</span><span>Target: 65%</span></div>
+        <div class="chart-value">68.5%</div>
+        <svg class="sparkline" viewBox="0 0 100 30"><polyline points="0,15 20,22 40,10 60,18 80,8 100,12" /></svg>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header"><span>Sunlight Intensity</span><span>Target: 15k Lux</span></div>
+        <div class="chart-value">14,200 Lux</div>
+        <svg class="sparkline" viewBox="0 0 100 30"><polyline points="0,28 20,25 40,12 60,5 80,15 100,22" /></svg>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header"><span>Average Soil pH</span><span>Target: 6.2 - 6.5</span></div>
+        <div class="chart-value">pH 6.3</div>
+        <svg class="sparkline" viewBox="0 0 100 30"><polyline points="0,15 20,16 40,14 60,15 80,14 100,15" /></svg>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 const log = document.getElementById("log");
 const form = document.getElementById("form");
 const input = document.getElementById("input");
 const themeToggle = document.getElementById("themeToggle");
 const uploadBtn = document.getElementById("uploadBtn");
+const micBtn = document.getElementById("micBtn");
 const fileInput = document.getElementById("fileInput");
 const calendarBtn = document.getElementById("calendarBtn");
 const calendarModal = document.getElementById("calendarModal");
-const closeModal = document.getElementById("closeModal");
+const closeCalendarModal = document.getElementById("closeCalendarModal");
 const calendarBody = document.getElementById("calendarBody");
+const telemetryBarBtn = document.getElementById("telemetryBarBtn");
+const telemetryModal = document.getElementById("telemetryModal");
+const closeTelemetryModal = document.getElementById("closeTelemetryModal");
+const ttsToggleBtn = document.getElementById("ttsToggleBtn");
 const printBtn = document.getElementById("printBtn");
+
+let ttsEnabled = false;
+
+ttsToggleBtn.addEventListener("click", () => {
+  ttsEnabled = !ttsEnabled;
+  ttsToggleBtn.classList.toggle("active", ttsEnabled);
+  if (ttsEnabled && 'speechSynthesis' in window) {
+    const u = new SpeechSynthesisUtterance("Voice AI speech output enabled.");
+    window.speechSynthesis.speak(u);
+  }
+});
 
 themeToggle.addEventListener("click", () => {
   document.body.classList.toggle("dark-mode");
@@ -446,6 +555,12 @@ themeToggle.addEventListener("click", () => {
 
 printBtn.addEventListener("click", () => { window.print(); });
 
+// Telemetry Modal
+telemetryBarBtn.addEventListener("click", () => { telemetryModal.classList.add("active"); });
+closeTelemetryModal.addEventListener("click", () => { telemetryModal.classList.remove("active"); });
+telemetryModal.addEventListener("click", (e) => { if (e.target === telemetryModal) telemetryModal.classList.remove("active"); });
+
+// Calendar Modal
 calendarBtn.addEventListener("click", async () => {
   calendarModal.classList.add("active");
   try {
@@ -461,12 +576,35 @@ calendarBtn.addEventListener("click", async () => {
     calendarBody.innerHTML = "<tr><td colspan='4'>Failed to load calendar schedule.</td></tr>";
   }
 });
-
-closeModal.addEventListener("click", () => { calendarModal.classList.remove("active"); });
+closeCalendarModal.addEventListener("click", () => { calendarModal.classList.remove("active"); });
 calendarModal.addEventListener("click", (e) => { if (e.target === calendarModal) calendarModal.classList.remove("active"); });
 
-uploadBtn.addEventListener("click", () => { fileInput.click(); });
+// Speech-to-Text Microphone
+if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+  const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const rec = new SpeechRec();
+  rec.continuous = false; rec.interimResults = false;
+  
+  micBtn.addEventListener("click", () => {
+    rec.start();
+    micBtn.classList.add("recording");
+  });
+  
+  rec.onresult = (e) => {
+    micBtn.classList.remove("recording");
+    const spoken = e.results[0][0].transcript;
+    input.value = spoken;
+    form.dispatchEvent(new Event("submit", { cancelable: true, bubbles: true }));
+  };
+  
+  rec.onerror = () => { micBtn.classList.remove("recording"); };
+  rec.onend = () => { micBtn.classList.remove("recording"); };
+} else {
+  micBtn.style.display = "none";
+}
 
+// Photo Upload
+uploadBtn.addEventListener("click", () => { fileInput.click(); });
 fileInput.addEventListener("change", async () => {
   const file = fileInput.files[0];
   if (!file) return;
@@ -506,7 +644,7 @@ document.querySelectorAll(".chip").forEach(chip => {
 
 function bubble(who) {
   const m = el("div", "msg " + who);
-  const author = el("span", "msg-author", who === "user" ? "You" : "PlantCare Suite");
+  const author = el("span", "msg-author", who === "user" ? "You" : "PlantCare OS");
   m.appendChild(author);
   const b = el("div", "bubble");
   m.appendChild(b);
@@ -518,7 +656,7 @@ function bubble(who) {
 function showTypingIndicator() {
   const m = el("div", "msg agent", null);
   m.id = "typing-msg";
-  const author = el("span", "msg-author", "PlantCare Suite");
+  const author = el("span", "msg-author", "PlantCare OS");
   m.appendChild(author);
   const b = el("div", "bubble");
   b.innerHTML = '<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>';
@@ -531,6 +669,16 @@ function showTypingIndicator() {
 function removeTypingIndicator() {
   const t = document.getElementById("typing-msg");
   if (t) t.remove();
+}
+
+function speakText(text) {
+  if (ttsEnabled && 'speechSynthesis' in window && text) {
+    window.speechSynthesis.cancel();
+    const cleanText = text.replace(/[\*\_#`]/g, "");
+    const u = new SpeechSynthesisUtterance(cleanText);
+    u.rate = 1.0;
+    window.speechSynthesis.speak(u);
+  }
 }
 
 function boundStr(v) {
@@ -629,7 +777,10 @@ function renderReply(b, parts) {
   const a2ui = parts.filter(p => p && p.kind === "a2ui" && p.data).map(p => p.data);
 
   const textStr = texts.join("\n").trim();
-  if (textStr) b.appendChild(el("div", null, textStr));
+  if (textStr) {
+    b.appendChild(el("div", null, textStr));
+    speakText(textStr);
+  }
 
   if (a2ui.length) {
     b.classList.add("rich");
