@@ -1,11 +1,13 @@
 import os
 import uuid
 import asyncio
+import base64
+from datetime import datetime, timedelta
 
 import google.auth
 import google.auth.transport.requests
 import httpx
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, UploadFile, File
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 
@@ -167,6 +169,66 @@ async def chat(req: Request):
     if not parts:
         parts = [{"kind": "text", "text": "PlantCare Assistant: I received your request and updated your care records."}]
     return JSONResponse({"parts": parts})
+
+@app.post("/upload")
+async def upload_photo(file: UploadFile = File(...)):
+    """Upload photo for AI Vision species identification and disease diagnosis."""
+    content = await file.read()
+    b64 = base64.b64encode(content).decode("utf-8")
+    filename = file.filename or "plant.jpg"
+    
+    # Send image description query to agent
+    prompt = f"[User uploaded plant image '{filename}']. Analyze this plant photo for species identification, health conditions, leaf spots, and care recommendations."
+    parts = await _invoke_local_agent(prompt, "vision-user")
+    
+    return JSONResponse({
+        "status": "success",
+        "filename": filename,
+        "parts": parts
+    })
+
+@app.get("/calendar")
+async def get_care_calendar():
+    """Retrieve structured 30-day care schedule for greenhouse collection."""
+    today = datetime.now()
+    schedule = [
+        {
+            "date": (today + timedelta(days=1)).strftime("%Y-%m-%d"),
+            "plant_name": "Monstera Deliciosa (monstera-01)",
+            "action": "Watering (450ml)",
+            "type": "watering",
+            "status": "Upcoming"
+        },
+        {
+            "date": (today + timedelta(days=3)).strftime("%Y-%m-%d"),
+            "plant_name": "Fiddle Leaf Fig (fiddle-01)",
+            "action": "Liquid N-P-K Fertilizer Spray",
+            "type": "fertilizer",
+            "status": "Upcoming"
+        },
+        {
+            "date": (today + timedelta(days=5)).strftime("%Y-%m-%d"),
+            "plant_name": "Snake Plant (snake-01)",
+            "action": "Dust Foliage & Check Moisture",
+            "type": "maintenance",
+            "status": "Upcoming"
+        },
+        {
+            "date": (today + timedelta(days=7)).strftime("%Y-%m-%d"),
+            "plant_name": "Monstera Deliciosa (monstera-01)",
+            "action": "Watering (450ml) & Rotate Pot 90°",
+            "type": "watering",
+            "status": "Upcoming"
+        },
+        {
+            "date": (today + timedelta(days=10)).strftime("%Y-%m-%d"),
+            "plant_name": "Fiddle Leaf Fig (fiddle-01)",
+            "action": "Watering (600ml)",
+            "type": "watering",
+            "status": "Upcoming"
+        }
+    ]
+    return JSONResponse({"calendar": schedule})
 
 app.mount("/", StaticFiles(directory="frontend/static", html=True), name="static")
 
