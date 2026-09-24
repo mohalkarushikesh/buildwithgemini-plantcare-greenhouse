@@ -11,6 +11,7 @@ from google.genai import types
 
 from app.tools import list_plants, get_plant, add_plant
 from app.image_tool import generate_plant_image
+from app.a2ui_utils import a2ui_callback
 
 MODEL = "gemini-2.5-flash"
 PROJECT_ID = "qwiklabs-gcp-02-99845fbbae24"
@@ -26,7 +27,7 @@ instruction = """You are PlantCare Greenhouse Assistant, an expert AI botanist a
 Your mission is to assist plant enthusiasts, greenhouse managers, and customers with:
 1. Catalog Management: Search, list, inspect, and add indoor plants in the Firestore catalog.
 2. Visual Plant Generation: Generate images of plants using `generate_plant_image` when requested or when illustrating plant species and diagnostic care steps. Return the generated public image URL.
-3. Code Execution & Calculations: Execute Python code to perform complex calculations (e.g. soil moisture scheduling, inventory value math, fertilizer dilutions, growth rate modeling).
+3. Code Execution & Calculations: Perform complex calculations (e.g. soil moisture scheduling, inventory value math, fertilizer dilutions, growth rate modeling) using Python code.
 4. Personalized Memory: Remember user preferences, plant collection details, lighting conditions, and watering schedules across sessions.
 
 Always maintain a warm, knowledgeable, and helpful tone. Format responses neatly with markdown.
@@ -52,6 +53,7 @@ root_agent = Agent(
         PreloadMemoryTool(),
     ],
     code_executor=code_executor,
+    after_model_callback=a2ui_callback,
     after_agent_callback=generate_memories_callback,
 )
 
