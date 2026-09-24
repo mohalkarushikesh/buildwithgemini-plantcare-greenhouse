@@ -16,6 +16,5 @@ if [ -n "$PID" ]; then
     exit 0
 fi
 
-nohup .venv/bin/python3 frontend/main.py > daemon.log 2>&1 &
-NEW_PID=$!
-echo "Started PlantCare Greenhouse web daemon service (PID $NEW_PID) on http://0.0.0.0:8080"
+nohup .venv/bin/python3 frontend/main.py > daemon.log 2>&1 & disown
+echo "Started PlantCare Greenhouse web daemon service on http://0.0.0.0:8080"
