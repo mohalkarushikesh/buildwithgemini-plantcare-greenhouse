@@ -9,7 +9,14 @@ from google.adk.models import Gemini
 from google.adk.tools.preload_memory_tool import PreloadMemoryTool
 from google.genai import types
 
-from app.tools import list_plants, get_plant, add_plant
+from app.tools import (
+    list_plants,
+    get_plant,
+    add_plant,
+    diagnose_plant_health,
+    calculate_fertilizer_dosage,
+    get_greenhouse_climate_stats,
+)
 from app.image_tool import generate_plant_image
 from app.a2ui_utils import a2ui_callback
 
@@ -25,12 +32,14 @@ async def generate_memories_callback(callback_context: CallbackContext):
 instruction = """You are PlantCare Greenhouse Assistant, an expert AI botanist and greenhouse catalog supervisor.
 
 Your mission is to assist plant enthusiasts, greenhouse managers, and customers with:
-1. Catalog Management: Search, list, inspect, and add indoor plants in the Firestore catalog.
-2. Visual Plant Generation: Generate images of plants using `generate_plant_image` when requested or when illustrating plant species and diagnostic care steps. Return the generated public image URL.
-3. Code Execution & Calculations: Perform complex calculations (e.g. soil moisture scheduling, inventory value math, fertilizer dilutions, growth rate modeling) using Python code.
-4. Personalized Memory: Remember user preferences, plant collection details, lighting conditions, and watering schedules across sessions.
+1. Catalog Management: Search, list, inspect, and add indoor plants in the Firestore catalog using `list_plants`, `get_plant`, and `add_plant`.
+2. Plant Health Diagnostics: Diagnose plant symptoms, leaf spot issues, or watering stress using `diagnose_plant_health`.
+3. Climate & Environmental Telemetry: Check real-time greenhouse temperature, humidity, and Lux light intensity with `get_greenhouse_climate_stats`.
+4. Fertilizer & Water Calculations: Compute liquid fertilizer N-P-K dilutions and soil moisture requirements using `calculate_fertilizer_dosage` or Python code execution.
+5. Visual Plant Generation: Generate images of plants using `generate_plant_image` when requested. Return the generated public image URL.
+6. Personalized Memory: Remember user preferences, plant collection details, and watering schedules across sessions.
 
-Always maintain a warm, knowledgeable, and helpful tone. Format responses neatly with markdown.
+Always maintain a warm, knowledgeable, and helpful tone. Format responses neatly with markdown tables, bullet points, and highlight key metrics.
 """
 
 code_executor = AgentEngineSandboxCodeExecutor(
@@ -49,6 +58,9 @@ root_agent = Agent(
         list_plants,
         get_plant,
         add_plant,
+        diagnose_plant_health,
+        calculate_fertilizer_dosage,
+        get_greenhouse_climate_stats,
         generate_plant_image,
         PreloadMemoryTool(),
     ],

@@ -34,27 +34,39 @@
     font-size: 1.25rem;
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    justify-content: space-between;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
+  .header-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
   }
   header .logo-icon {
     font-size: 1.75rem;
+  }
+  .header-badge {
+    font-size: 0.75rem;
+    background: rgba(255,255,255,0.2);
+    padding: 0.25rem 0.65rem;
+    border-radius: 12px;
+    font-weight: 500;
   }
   #log {
     flex: 1;
     overflow-y: auto;
     padding: 1.5rem;
-    max-width: 860px;
+    max-width: 920px;
     width: 100%;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.25rem;
   }
   .msg {
     display: flex;
     flex-direction: column;
-    gap: 0.3rem;
+    gap: 0.35rem;
   }
   .msg.user {
     align-items: flex-end;
@@ -70,7 +82,7 @@
   }
   .bubble {
     display: inline-block;
-    padding: 0.85rem 1.2rem;
+    padding: 0.9rem 1.25rem;
     border-radius: 16px;
     background: var(--card-bg);
     border: 1px solid var(--border);
@@ -97,17 +109,68 @@
     white-space: normal;
     box-shadow: none;
   }
+  .typing-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--primary);
+    animation: typing 1.4s infinite ease-in-out both;
+    margin: 0 2px;
+  }
+  .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+  .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+  @keyframes typing {
+    0%, 80%, 100% { transform: scale(0); }
+    40% { transform: scale(1); }
+  }
+
+  .controls-container {
+    max-width: 920px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 1.5rem 1rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .chip-bar {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding-bottom: 0.25rem;
+    scrollbar-width: thin;
+  }
+  .chip {
+    background: #ffffff;
+    border: 1px solid var(--border);
+    color: var(--text-dark);
+    padding: 0.4rem 0.85rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  .chip:hover {
+    background: var(--primary-light);
+    border-color: var(--primary);
+    color: var(--primary);
+    transform: translateY(-1px);
+  }
+
   form {
     display: flex;
     gap: 0.75rem;
-    padding: 1.2rem 1.5rem;
-    border-top: 1px solid var(--border);
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--border);
     background: #ffffff;
-    max-width: 900px;
-    width: 100%;
-    margin: 0 auto;
-    border-radius: 16px 16px 0 0;
-    box-shadow: 0 -4px 15px rgba(0,0,0,0.02);
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
   }
   input {
     flex: 1;
@@ -133,6 +196,9 @@
     font-family: inherit;
     cursor: pointer;
     transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
   }
   button:hover {
     background: var(--accent);
@@ -164,21 +230,34 @@
 </head>
 <body>
 <header>
-  <span class="material-symbols-outlined logo-icon">potted_plant</span>
-  <span>PlantCare Greenhouse Assistant</span>
+  <div class="header-title">
+    <span class="material-symbols-outlined logo-icon">potted_plant</span>
+    <span>PlantCare Greenhouse Assistant</span>
+  </div>
+  <div class="header-badge">Gemini 2.5 • ADK • Cloud Run</div>
 </header>
 
 <div id="log">
   <div class="msg agent">
     <span class="msg-author">PlantCare Assistant</span>
-    <div class="bubble">🌿 Hello! I am your PlantCare Greenhouse Assistant. How can I help you manage your plant catalog, calculate care schedules, or generate plant imagery today?</div>
+    <div class="bubble">🌿 Hello! I am your PlantCare Greenhouse Assistant. How can I help you manage your plant catalog, run health diagnostics, inspect climate telemetry, or generate plant imagery today?</div>
   </div>
 </div>
 
-<form id="form">
-  <input id="input" placeholder="Ask about plants, care schedules, or request a plant image..." autocomplete="off" autofocus>
-  <button>Send</button>
-</form>
+<div class="controls-container">
+  <div class="chip-bar">
+    <div class="chip" data-prompt="List all plants currently in our greenhouse catalog and check watering schedules.">🪴 Catalog & Schedules</div>
+    <div class="chip" data-prompt="My Monstera has yellowing leaves with brown spots, please diagnose its health issue.">🩺 Plant Health Diagnostic</div>
+    <div class="chip" data-prompt="Check real-time greenhouse climate telemetry stats.">🌡️ Climate Telemetry</div>
+    <div class="chip" data-prompt="Calculate fertilizer dosage for 15 plants in 8-inch pots for spring/summer.">🧪 Fertilizer Math</div>
+    <div class="chip" data-prompt="Generate an image of a vibrant Golden Pothos trailing house plant in bright sunlight.">🖼️ Generate Plant Image</div>
+  </div>
+
+  <form id="form">
+    <input id="input" placeholder="Ask about plant catalog, care diagnostics, climate stats, or request an image..." autocomplete="off" autofocus>
+    <button><span>Send</span> <span class="material-symbols-outlined" style="color:#fff; font-size:1.1rem;">send</span></button>
+  </form>
+</div>
 
 <script>
 const log = document.getElementById("log");
@@ -186,6 +265,16 @@ const form = document.getElementById("form");
 const input = document.getElementById("input");
 
 function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+
+document.querySelectorAll(".chip").forEach(chip => {
+  chip.addEventListener("click", () => {
+    const prompt = chip.getAttribute("data-prompt");
+    if (prompt) {
+      input.value = prompt;
+      form.dispatchEvent(new Event("submit", { cancelable: true, bubbles: true }));
+    }
+  });
+});
 
 function bubble(who) {
   const m = el("div", "msg " + who);
@@ -196,6 +285,24 @@ function bubble(who) {
   log.appendChild(m);
   log.scrollTop = log.scrollHeight;
   return b;
+}
+
+function showTypingIndicator() {
+  const m = el("div", "msg agent", null);
+  m.id = "typing-msg";
+  const author = el("span", "msg-author", "PlantCare Assistant");
+  m.appendChild(author);
+  const b = el("div", "bubble");
+  b.innerHTML = '<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>';
+  m.appendChild(b);
+  log.appendChild(m);
+  log.scrollTop = log.scrollHeight;
+  return m;
+}
+
+function removeTypingIndicator() {
+  const t = document.getElementById("typing-msg");
+  if (t) t.remove();
 }
 
 function boundStr(v) {
@@ -310,15 +417,20 @@ form.addEventListener("submit", async (ev) => {
   if (!text) return;
   bubble("user").textContent = text;
   input.value = "";
-  const b = bubble("agent"); b.textContent = "…";
+  showTypingIndicator();
+
   try {
     const res = await fetch("/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ message: text }) });
     const raw = await res.text();
+    removeTypingIndicator();
+    const b = bubble("agent");
     let data;
     try { data = JSON.parse(raw); }
     catch { throw new Error(`Server returned non-JSON (HTTP ${res.status}). ${raw.slice(0, 300)}`); }
     renderReply(b, data.parts || []);
   } catch (e) {
+    removeTypingIndicator();
+    const b = bubble("agent");
     b.textContent = "Error: " + e.message;
   }
 });

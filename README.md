@@ -17,22 +17,42 @@ A production-ready conversational AI agent and web application built with Google
 
 ---
 
+## ✨ Features & Tools
+
+1. **🪴 Greenhouse Catalog Management**: Real-time Cloud Firestore integration (`list_plants`, `get_plant`, `add_plant`).
+2. **🩺 Plant Health Diagnostics**: Instant disease, pest, and watering diagnosis (`diagnose_plant_health`).
+3. **🌡️ Climate & Environmental Telemetry**: Real-time greenhouse sensor tracking for temp, humidity %, Lux light, CO2, and soil pH (`get_greenhouse_climate_stats`).
+4. **🧪 Fertilizer & Liquid Dosage Math**: Calculates N-P-K fertilizer dilutions based on pot size and growth season (`calculate_fertilizer_dosage`).
+5. **🖼️ Imagen 3 Image Generation**: Creates realistic visual imagery of healthy indoor plants (`generate_plant_image`).
+6. **🧮 Server-Side Code Execution**: Executes Python code for soil moisture schedules via `AgentEngineSandboxCodeExecutor`.
+7. **💡 Interactive Quick Chips & Typing Animations**: Enhanced UI with click-to-run prompt chips and smooth typing indicators.
+
+---
+
 ## 💡 Sample Questions & Prompts
 
-Try asking the agent any of the following sample queries in the web chat interface:
-
-### 🪴 Sample Question 1: Catalog Inspection & Watering Schedules
+### 🪴 1. Catalog Inspection & Watering Schedules
 > *"List all plants currently in our greenhouse catalog and check watering schedules."*
 
 ---
 
-### 🎨 Sample Question 2: Visual Diagnostics & Imagen Generation
-> *"Generate a high-quality visual photo of a healthy Monstera Deliciosa plant thriving in bright indirect sunlight."*
+### 🩺 2. Plant Health Diagnostics
+> *"My Monstera has yellowing leaves with brown spots, please diagnose its health issue."*
 
 ---
 
-### 🧮 Sample Question 3: Soil Moisture Math & Inventory Calculations
-> *"We have 15 Monsteras requiring 450ml water twice a week, and 12 Snake Plants needing 200ml once a week. Calculate total monthly water consumption in liters using Python."*
+### 🌡️ 3. Greenhouse Climate Telemetry
+> *"Check real-time greenhouse climate telemetry stats."*
+
+---
+
+### 🧪 4. Fertilizer Dilution Calculations
+> *"Calculate fertilizer dosage for 15 plants in 8-inch pots for spring/summer."*
+
+---
+
+### 🖼️ 5. Visual Diagnostics & Imagen Generation
+> *"Generate a high-quality visual photo of a healthy Monstera Deliciosa plant thriving in bright indirect sunlight."*
 
 ---
 
@@ -53,7 +73,7 @@ You can run the web application continuously in the background on your local wor
 
 ---
 
-## 🏗️ Architecture & Features
+## 🏗️ Architecture & Stack
 
 - **Model Engine**: Gemini 2.5 Flash via Google Cloud Vertex AI (`google-genai`).
 - **Catalog Database**: Native Cloud Firestore (`plants` collection).
@@ -61,18 +81,3 @@ You can run the web application continuously in the background on your local wor
 - **Code Execution**: `AgentEngineSandboxCodeExecutor` for safe server-side Python math execution.
 - **Visual Interface**: FastAPI proxy with built-in A2UI card renderer.
 - **Deployment**: Google Cloud Run in `us-east4`.
-
----
-
-## 🛠️ Local Development
-
-### Requirements
-- Python 3.11+
-- `uv` package manager (`uv sync`)
-
-### Test Chat Endpoint Locally
-```bash
-curl -s -X POST http://localhost:8080/chat \
-  -H "Content-Type: application/json" \
-  -d '{"message": "List all plants in our catalog"}'
-```
