@@ -22,6 +22,8 @@ from app.tools import (
     get_soil_mix_recipe,
     calculate_grow_light_schedule,
     lookup_pest_treatment,
+    compare_plant_growth,
+    trigger_automated_greenhouse_rule,
 )
 from app.image_tool import generate_plant_image
 from app.a2ui_utils import a2ui_callback
@@ -47,8 +49,10 @@ You provide end-to-end plant care, greenhouse automation, and catalog solutions:
 7. Grow Light Photoperiod Math: Calculate LED supplemental light hours and DLI using `calculate_grow_light_schedule`.
 8. Liquid Fertilizer Calculations: Compute N-P-K dilutions using `calculate_fertilizer_dosage` or Python code execution.
 9. Executive Reporting: Export valuation, plant health index, and catalog summaries using `export_greenhouse_report`.
-10. Visual Plant Generation: Generate images of plants using `generate_plant_image` when requested. Return the public image URL.
-11. Personalized Memory: Remember user preferences, plant collection details, and care schedules across sessions.
+10. Plant Growth Analytics: Track growth velocity (cm/week) and node unfurling using `compare_plant_growth`.
+11. Automation Rules: Configure automated sensor trigger rules using `trigger_automated_greenhouse_rule`.
+12. Visual Plant Generation: Generate images of plants using `generate_plant_image` when requested. Return the public image URL.
+13. Personalized Memory: Remember user preferences, plant collection details, and care schedules across sessions.
 
 Always maintain a warm, knowledgeable, and professional tone. Format responses neatly with markdown tables, bullet points, and key metrics.
 """
@@ -78,6 +82,8 @@ root_agent = Agent(
         get_soil_mix_recipe,
         calculate_grow_light_schedule,
         lookup_pest_treatment,
+        compare_plant_growth,
+        trigger_automated_greenhouse_rule,
         generate_plant_image,
         PreloadMemoryTool(),
     ],
@@ -85,6 +91,7 @@ root_agent = Agent(
     after_model_callback=a2ui_callback,
     after_agent_callback=generate_memories_callback,
 )
+
 
 app = App(
     root_agent=root_agent,

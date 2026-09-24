@@ -228,9 +228,20 @@ async def get_care_calendar():
             "status": "Upcoming"
         }
     ]
-    return JSONResponse({"calendar": schedule})
+@app.get("/export-csv")
+async def export_csv():
+    """Export greenhouse catalog data as downloadable CSV."""
+    from app.tools import list_plants
+    plants = list_plants()
+    lines = ["ID,Name,Species,Price_USD,Light_Requirement,Watering_Days,In_Stock,Stock_Count"]
+    for p in plants:
+        lines.append(f"{p.get('id','')},{p.get('name','')},{p.get('species','')},{p.get('price',0.0)},\"{p.get('light_requirements','')}\",{p.get('watering_interval_days',7)},{p.get('in_stock',True)},{p.get('stock_count',10)}")
+    csv_content = "\n".join(lines)
+    from fastapi.responses import Response
+    return Response(content=csv_content, media_type="text/csv", headers={"Content-Disposition": "attachment; filename=greenhouse_catalog.csv"})
 
 app.mount("/", StaticFiles(directory="frontend/static", html=True), name="static")
+
 
 if __name__ == "__main__":
     import uvicorn

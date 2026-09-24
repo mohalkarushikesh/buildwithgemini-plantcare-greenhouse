@@ -412,10 +412,15 @@
       <span class="material-symbols-outlined" style="color:#fff; font-size:1.1rem;">calendar_month</span>
       <span>Care Schedule</span>
     </button>
+    <button id="exportCsvBtn" class="header-btn" title="Download Greenhouse Catalog CSV">
+      <span class="material-symbols-outlined" style="color:#fff; font-size:1.1rem;">download</span>
+      <span>Export CSV</span>
+    </button>
     <button id="printBtn" class="header-btn" title="Print Care Sheet">
       <span class="material-symbols-outlined" style="color:#fff; font-size:1.1rem;">print</span>
       <span>Print Sheet</span>
     </button>
+
     <button id="themeToggle" class="theme-toggle" title="Toggle Dark/Light Mode">
       <span class="material-symbols-outlined" style="color:#fff;">dark_mode</span>
     </button>
@@ -553,7 +558,11 @@ themeToggle.addEventListener("click", () => {
   themeToggle.querySelector("span").textContent = isDark ? "light_mode" : "dark_mode";
 });
 
+const exportCsvBtn = document.getElementById("exportCsvBtn");
+exportCsvBtn.addEventListener("click", () => { window.location.href = "/export-csv"; });
+
 printBtn.addEventListener("click", () => { window.print(); });
+
 
 // Telemetry Modal
 telemetryBarBtn.addEventListener("click", () => { telemetryModal.classList.add("active"); });

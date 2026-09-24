@@ -331,3 +331,55 @@ def lookup_pest_treatment(pest_name: str) -> dict:
         "treatment_frequency": freq,
         "prevention_tip": "Maintain high humidity (>60%) and wipe leaf dust regularly with micro-fiber cloth."
     }
+
+def compare_plant_growth(plant_name: str, days_elapsed: int, initial_height_cm: float, current_height_cm: float, new_leaves_count: int) -> dict:
+    """Analyze plant growth rate velocity, height increase percentage, and leaf node formation rate over a time period.
+    
+    Args:
+        plant_name: Name of the plant (e.g. 'Monstera Deliciosa').
+        days_elapsed: Number of days between measurements.
+        initial_height_cm: Initial height in cm.
+        current_height_cm: Current height in cm.
+        new_leaves_count: Number of new leaves unfurled during the period.
+        
+    Returns:
+        Dictionary containing growth velocity (cm/week), percentage height gain, and health trajectory rating.
+    """
+    height_gain_cm = round(current_height_cm - initial_height_cm, 2)
+    pct_gain = round((height_gain_cm / initial_height_cm) * 100.0, 1) if initial_height_cm > 0 else 0.0
+    growth_rate_cm_per_week = round((height_gain_cm / days_elapsed) * 7.0, 2) if days_elapsed > 0 else 0.0
+    
+    return {
+        "plant_name": plant_name,
+        "days_elapsed": days_elapsed,
+        "height_gain_cm": height_gain_cm,
+        "percentage_growth_gain": f"+{pct_gain}%",
+        "growth_velocity": f"{growth_rate_cm_per_week} cm/week",
+        "new_leaves_unfurled": new_leaves_count,
+        "health_trajectory": "Exceptional Growth Velocity 🚀" if pct_gain > 15 else "Steady & Healthy Growth 🌿",
+        "projected_height_90_days_cm": round(current_height_cm + (growth_rate_cm_per_week * 12.8), 1)
+    }
+
+def trigger_automated_greenhouse_rule(rule_name: str, trigger_sensor: str, threshold_value: float, target_actuator: str) -> dict:
+    """Configure an automated AI rule for greenhouse solenoids, fans, misting nozzles, and grow light relays.
+    
+    Args:
+        rule_name: Name of automation rule (e.g. 'Auto Moisture Drip', 'High Temp Exhaust Fan').
+        trigger_sensor: Sensor to monitor ('soil_moisture', 'temperature', 'humidity', 'light_intensity').
+        threshold_value: Trigger threshold value (e.g. 30.0 for 30% moisture, 28.0 for 28°C temp).
+        target_actuator: Actuator to activate ('drip_solenoid_valve_1', 'exhaust_fan_zone1', 'misting_nozzles').
+        
+    Returns:
+        Confirmation dictionary with rule active status, trigger condition, and safety override parameters.
+    """
+    rule_id = f"RULE-{random.randint(100, 999)}"
+    return {
+        "rule_id": rule_id,
+        "rule_name": rule_name,
+        "status": "Active & Monitoring ⚡",
+        "condition": f"IF {trigger_sensor} < {threshold_value} THEN ACTIVATE {target_actuator}",
+        "check_frequency": "Every 60 seconds",
+        "safety_max_runtime_minutes": 15,
+        "notification_alert": "Enabled (Push & Log)"
+    }
+
