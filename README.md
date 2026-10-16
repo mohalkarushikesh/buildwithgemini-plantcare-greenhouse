@@ -7,6 +7,7 @@ A production-ready conversational AI agent and web application built with Google
 ## 🎨 User Interface Preview & Sample Questions
 
 ![PlantCare Greenhouse Assistant UI](/assets/ui_screenshot.png)
+![PlantCare Greenhouse Assistant DashBoard](/assets/dashboard.png)
 
 ### 💬 Featured Sample Questions (First Impression):
 - 🪴 **Sample Question 1**: *"List all plants currently in our greenhouse catalog and check watering schedules."*
