@@ -1,0 +1,4 @@
+- PPFD (Photosynthetic Photon Flux Density): Instantaneous light intensity (400–700 nm) hitting 1 m² per second. 
+  - Measured in μmol/m²/s.
+- DLI (Daily Light Integral): Total cumulative light dose received in 1 m² over a 24-hour day.  
+  - Measured in mol/m²/day.

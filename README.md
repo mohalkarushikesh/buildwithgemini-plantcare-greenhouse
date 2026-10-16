@@ -101,6 +101,12 @@ GOOGLE_GENAI_USE_VERTEXAI=false
 grep -nE "VertexAi|vertexai|Agent\\(|model=|GOOGLE_GENAI_USE_VERTEXAI|GEMINI_API_KEY" app/agent.py app/fast_api_app.py frontend/main.py
 ```
 
+### Run 
+
+```
+python frontend/main.py
+```
+
 ---
 
 ## 🏗️ Architecture & Stack
