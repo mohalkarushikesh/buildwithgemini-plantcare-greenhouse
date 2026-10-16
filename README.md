@@ -6,7 +6,7 @@ A production-ready conversational AI agent and web application built with Google
 
 ## 🎨 User Interface Preview & Sample Questions
 
-![PlantCare Greenhouse Assistant UI](ui_screenshot.png)
+![PlantCare Greenhouse Assistant UI](/assets/ui_screenshot.png)
 
 ### 💬 Featured Sample Questions (First Impression):
 - 🪴 **Sample Question 1**: *"List all plants currently in our greenhouse catalog and check watering schedules."*
@@ -53,9 +53,48 @@ A production-ready conversational AI agent and web application built with Google
 
 ## 🖥️ Running as a Local Daemon Service
 
+### 1. Clone
+
+```
+git clone https://github.com/mohalkarushikesh/buildwithgemini-plantcare-greenhouse.git
+cd buildwithgemini-plantcare-greenhouse
+```
+
+### 2. Install dependencies (the repo uses uv + pyproject.toml)
+
+```
+pip install uv
+uv sync
+```
+
+### 3. Set up environment variables
+
+```
+cp .env.example .env
+```
+#### edit .env: add your Google Cloud project, Vertex AI / Gemini credentials
+
+### 4. Authenticate with Google Cloud (needed for Vertex AI + Firestore)
+```
+gcloud auth application-default login
+```
+
+### 5. Start the app
+
 ```bash
 ./start_daemon.sh   # Runs continuously on http://localhost:8080
 ./stop_daemon.sh    # Stops background service
+```
+## Else 
+
+```
+GEMINI_API_KEY=your_actual_api_key
+GOOGLE_GENAI_USE_VERTEXAI=false
+```
+
+#### If it fails, run:
+```
+grep -nE "VertexAi|vertexai|Agent\\(|model=|GOOGLE_GENAI_USE_VERTEXAI|GEMINI_API_KEY" app/agent.py app/fast_api_app.py frontend/main.py
 ```
 
 ---

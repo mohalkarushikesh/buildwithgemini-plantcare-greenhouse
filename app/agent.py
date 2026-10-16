@@ -28,7 +28,7 @@ from app.tools import (
 from app.image_tool import generate_plant_image
 from app.a2ui_utils import a2ui_callback
 
-MODEL = "gemini-2.5-flash"
+MODEL = "gemini-2.5-flash-lite"
 PROJECT_ID = "qwiklabs-gcp-02-99845fbbae24"
 LOCATION = "us-east4"
 
